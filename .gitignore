@@ -36,6 +36,37 @@ __pycache__/
 # Virtual environment
 .venv/
 
-# Environment
+# Environment and secrets
 .env
+.env.*
 .env.local
+.env.development
+.env.production
+*.local
+
+# API keys and credentials
+.secrets
+.credentials
+*credentials*.json
+*secrets*.json
+*token*.json
+service-account*.json
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa*
+*.pub
+
+# AWS
+.aws/
+aws-exports.js
+
+# Editor/IDE local configs (may contain tokens)
+.idea/
+.vscode/settings.json
+*.code-workspace
