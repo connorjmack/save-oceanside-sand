@@ -2,15 +2,15 @@
 Survey Processor - Main Data Pipeline Script
 
 Orchestrates the complete data processing pipeline:
-1. Parse all LLH files from data/LLH directory
+1. Parse all LLH files from data/raw/LLH directory
 2. Group points into transects
 3. Generate survey metadata index
 4. Output processed data files for frontend consumption
 
 Outputs:
-- processed/surveys.json: Metadata index of all survey dates
-- processed/transects.geojson: GeoJSON of all transects for map display
-- processed/profiles/: Individual transect profile data
+- data/processed/surveys.json: Metadata index of all survey dates
+- data/processed/transects.geojson: GeoJSON of all transects for map display
+- data/processed/profiles/: Individual transect profile data
 """
 
 import os
@@ -19,8 +19,10 @@ from datetime import datetime
 from typing import List, Dict
 from collections import defaultdict
 
-from parse_llh import parse_all_llh_files, LLHFile
-from generate_transects import segment_points_into_transects, Transect, generate_transects_geojson, generate_profile_data
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from utilities.parse_llh import parse_all_llh_files, LLHFile
+from scripts.generate_transects import segment_points_into_transects, Transect, generate_transects_geojson, generate_profile_data
 
 
 def aggregate_surveys_by_date(llh_files: List[LLHFile]) -> Dict[str, List[LLHFile]]:
@@ -163,8 +165,8 @@ def main():
     import sys
 
     # Configuration
-    data_dir = sys.argv[1] if len(sys.argv) > 1 else 'data/LLH'
-    output_dir = 'processed'
+    data_dir = sys.argv[1] if len(sys.argv) > 1 else 'data/raw/LLH'
+    output_dir = 'data/processed'
 
     print("="*60)
     print("OCEANSIDE BEACH SURVEY DATA PROCESSOR")

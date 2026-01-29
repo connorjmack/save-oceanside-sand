@@ -18,3 +18,24 @@
 # Images
 *.png
 *.gif
+
+# Node.js
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# DEM surface files (large binary data)
+data/processed/surfaces/*.dem.bin
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environment
+.venv/
+
+# Environment
+.env
+.env.local

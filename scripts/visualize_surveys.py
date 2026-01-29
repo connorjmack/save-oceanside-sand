@@ -21,16 +21,16 @@ import numpy as np
 
 def load_survey_data():
     """Load processed survey data"""
-    with open('processed/surveys.json', 'r') as f:
+    with open('data/processed/surveys.json', 'r') as f:
         surveys = json.load(f)
 
-    with open('processed/transects.geojson', 'r') as f:
+    with open('data/processed/transects.geojson', 'r') as f:
         transects = json.load(f)
 
     return surveys, transects
 
 
-def create_interactive_map(transects, output_path='visualizations/transects_map.html'):
+def create_interactive_map(transects, output_path='figures/transects_map.html'):
     """
     Create an interactive Folium map with all transects.
 
@@ -126,14 +126,14 @@ def create_interactive_map(transects, output_path='visualizations/transects_map.
     return output_path
 
 
-def create_elevation_profiles(output_path='visualizations/elevation_profiles.png'):
+def create_elevation_profiles(output_path='figures/elevation_profiles.png'):
     """
     Create sample elevation profiles from different survey dates.
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # Get list of profile files
-    profile_dir = 'processed/profiles'
+    profile_dir = 'data/processed/profiles'
     profile_files = os.listdir(profile_dir)
 
     # Group by date
@@ -199,7 +199,7 @@ def create_elevation_profiles(output_path='visualizations/elevation_profiles.png
     return output_path
 
 
-def create_statistics_dashboard(surveys, output_path='visualizations/survey_statistics.png'):
+def create_statistics_dashboard(surveys, output_path='figures/survey_statistics.png'):
     """
     Create a dashboard showing survey statistics over time.
     """
@@ -319,7 +319,7 @@ def main():
     print("\n" + "="*60)
     print("VISUALIZATIONS COMPLETE!")
     print("="*60)
-    print(f"\nOutput files in 'visualizations/' directory:")
+    print(f"\nOutput files in 'figures/' directory:")
     print(f"  - transects_map.html  (open in browser)")
     print(f"  - elevation_profiles.png")
     print(f"  - survey_statistics.png")

@@ -11,11 +11,11 @@ from collections import defaultdict
 
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from parse_llh import LLHFile, LLHPoint
-from generate_transects import Transect
-from process_surveys import (
+from utilities.parse_llh import LLHFile, LLHPoint
+from scripts.generate_transects import Transect
+from scripts.process_surveys import (
     aggregate_surveys_by_date,
     generate_survey_metadata
 )

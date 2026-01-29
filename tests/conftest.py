@@ -8,10 +8,10 @@ import tempfile
 import pytest
 from datetime import datetime
 
-# Add scripts directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+# Add project root to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from parse_llh import LLHPoint, LLHFile
+from utilities.parse_llh import LLHPoint, LLHFile
 
 
 @pytest.fixture

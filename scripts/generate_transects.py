@@ -15,7 +15,9 @@ import math
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Optional
 import numpy as np
-from parse_llh import LLHFile, LLHPoint
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from utilities.parse_llh import LLHFile, LLHPoint
 
 
 class Transect:
@@ -315,13 +317,12 @@ def generate_profile_data(transects: List[Transect], output_dir: str):
 
 
 if __name__ == '__main__':
-    import sys
-    from parse_llh import parse_all_llh_files
+    from utilities.parse_llh import parse_all_llh_files
 
     if len(sys.argv) > 1:
         data_dir = sys.argv[1]
     else:
-        data_dir = 'data/LLH'
+        data_dir = 'data/raw/LLH'
 
     print(f"Processing LLH files from: {data_dir}")
     llh_files = parse_all_llh_files(data_dir)
@@ -336,7 +337,7 @@ if __name__ == '__main__':
     print(f"\nTotal transects generated: {len(all_transects)}")
 
     # Generate outputs
-    generate_transects_geojson(all_transects, 'processed/transects.geojson')
-    generate_profile_data(all_transects, 'processed/profiles')
+    generate_transects_geojson(all_transects, 'data/processed/transects.geojson')
+    generate_profile_data(all_transects, 'data/processed/profiles')
 
     print("\nDone!")

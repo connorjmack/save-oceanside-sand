@@ -283,7 +283,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         data_dir = sys.argv[1]
     else:
-        data_dir = 'data/LLH'
+        data_dir = 'data/raw/LLH'
 
     print(f"Parsing LLH files from: {data_dir}")
     llh_files = parse_all_llh_files(data_dir)

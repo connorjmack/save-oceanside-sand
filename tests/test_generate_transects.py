@@ -11,10 +11,10 @@ from datetime import datetime
 
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from parse_llh import LLHPoint, LLHFile
-from generate_transects import (
+from utilities.parse_llh import LLHPoint, LLHFile
+from scripts.generate_transects import (
     Transect,
     haversine_distance,
     calculate_bearing,

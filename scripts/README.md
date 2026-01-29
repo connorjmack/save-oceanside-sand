@@ -4,8 +4,8 @@ Python scripts for processing beach survey LLH files into optimized formats for 
 
 ## Scripts Overview
 
-### 1. `parse_llh.py`
-Parses raw LLH files from Emlid Reach GNSS receivers.
+### `utilities/parse_llh.py`
+Parses raw LLH files from Emlid Reach GNSS receivers. Located in `utilities/` as a shared module.
 
 **Features:**
 - Extracts GPS points with position, quality, and metadata
@@ -15,7 +15,7 @@ Parses raw LLH files from Emlid Reach GNSS receivers.
 
 **Usage:**
 ```bash
-python scripts/parse_llh.py data/LLH
+python utilities/parse_llh.py data/raw/LLH
 ```
 
 **Classes:**
@@ -24,7 +24,7 @@ python scripts/parse_llh.py data/LLH
 - `parse_llh_file()`: Parse a single LLH file
 - `parse_all_llh_files()`: Parse entire directory
 
-### 2. `generate_transects.py`
+### `generate_transects.py`
 Segments continuous GPS point streams into discrete beach transects.
 
 **Segmentation Algorithm:**
@@ -38,7 +38,7 @@ Segments continuous GPS point streams into discrete beach transects.
 
 **Usage:**
 ```bash
-python scripts/generate_transects.py data/LLH
+python scripts/generate_transects.py data/raw/LLH
 ```
 
 **Classes:**
@@ -47,19 +47,19 @@ python scripts/generate_transects.py data/LLH
 - `generate_transects_geojson()`: Create GeoJSON output
 - `generate_profile_data()`: Create per-transect profile JSON
 
-### 3. `process_surveys.py` (Main Pipeline)
+### `process_surveys.py` (Main Pipeline)
 Orchestrates the complete data processing workflow.
 
 **Pipeline Steps:**
-1. Parse all LLH files from `data/LLH/`
+1. Parse all LLH files from `data/raw/LLH/`
 2. Group files by survey date
 3. Segment points into transects
-4. Generate output files in `processed/` directory
+4. Generate output files in `data/processed/` directory
 
 **Outputs:**
-- `processed/surveys.json`: Survey metadata index with statistics
-- `processed/transects.geojson`: All transects as GeoJSON FeatureCollection
-- `processed/profiles/*.json`: Individual transect profile data
+- `data/processed/surveys.json`: Survey metadata index with statistics
+- `data/processed/transects.geojson`: All transects as GeoJSON FeatureCollection
+- `data/processed/profiles/*.json`: Individual transect profile data
 
 **Usage:**
 ```bash
@@ -83,17 +83,21 @@ pip install -r requirements.txt
 ## Data Flow
 
 ```
-data/LLH/*.LLH
+data/raw/LLH/*.LLH
     ↓
-[parse_llh.py] → Parse GPS points
+[utilities/parse_llh.py] → Parse GPS points
     ↓
-[generate_transects.py] → Segment into transects
+[scripts/generate_transects.py] → Segment into transects
     ↓
-[process_surveys.py] → Aggregate and output
+[scripts/process_surveys.py] → Aggregate and output
     ↓
-processed/
+data/processed/
     ├── surveys.json          (metadata index)
     ├── transects.geojson     (map geometries)
+    ├── surfaces/             (3D DEM surfaces)
+    │   ├── *.dem.bin
+    │   ├── *.dem.json
+    │   └── surfaces_index.json
     └── profiles/             (elevation profiles)
         ├── 20221103_Device1_T001.json
         ├── 20221103_Device1_T002.json
@@ -187,7 +191,7 @@ Adjust in `process_surveys.py` → `segment_points_into_transects()`:
 ## Troubleshooting
 
 **No LLH files found:**
-- Ensure files are in `data/LLH/` directory
+- Ensure files are in `data/raw/LLH/` directory
 - Check file extensions (`.LLH` or `.llh`)
 
 **Parsing errors:**
@@ -204,4 +208,4 @@ Adjust in `process_surveys.py` → `segment_points_into_transects()`:
 
 ## Next Steps
 
-After running `process_surveys.py`, the `processed/` directory contains all data needed for the frontend React application (Phase 2).
+After running `process_surveys.py`, the `data/processed/` directory contains all data needed for the frontend React application.

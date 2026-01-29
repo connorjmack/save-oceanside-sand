@@ -51,7 +51,7 @@ This visualization tool processes LLH (Latitude, Longitude, Height) files from E
 
 ### Input: LLH Files
 
-Located in `data/LLH/`, files follow naming convention:
+Located in `data/raw/LLH/`, files follow naming convention:
 ```
 YYYY_MM_DD_[DeviceName]_solution_YYYYMMDDHHMMSS.LLH
 ```
@@ -104,44 +104,68 @@ YYYY/MM/DD HH:MM:SS.sss  latitude  longitude  height  Q  ns  sdn  sde  sdu  sdne
 ### Data Pipeline
 
 ```
-data/LLH/*.LLH  →  [Python Parser]  →  processed/
-                                           ├── surveys.json       (metadata index)
-                                           ├── transects.geojson  (map geometries)
-                                           └── profiles/          (per-transect data)
-                                                 ├── transect_001.json
-                                                 └── ...
+data/raw/LLH/*.LLH  →  [Python Parser]  →  data/processed/
+                                                ├── surveys.json       (metadata index)
+                                                ├── transects.geojson  (map geometries)
+                                                ├── surfaces/          (3D DEM surfaces)
+                                                └── profiles/          (per-transect data)
+                                                      ├── transect_001.json
+                                                      └── ...
 ```
 
 ### File Structure
 
 ```
-oceanside-beach-viz/
+save-oceanside-sand/
+├── .venv/                      # Python virtual environment
+├── CLAUDE.md                   # AI assistant instructions
+├── LICENSE
 ├── README.md
+├── requirements.txt            # Python dependencies
+│
 ├── data/
-│   ├── LLH/                    # Raw survey data (209 files)
-│   └── zips/                   # Archived original zips
-├── scripts/
-│   ├── parse_llh.py            # LLH file parser
-│   ├── process_surveys.py      # Aggregate by date
-│   └── generate_transects.py   # Create transect geometries
-├── processed/                  # Generated data for frontend
-│   ├── surveys.json
-│   ├── transects.geojson
-│   └── profiles/
-├── src/
-│   ├── components/
-│   │   ├── MapView.tsx         # Main map interface
-│   │   ├── ProfileView.tsx     # Transect detail view
-│   │   ├── Timeline.tsx        # Date navigation
-│   │   └── TransectLayer.tsx   # Map transect rendering
-│   ├── hooks/
-│   │   ├── useTransectData.ts  # Data fetching/caching
-│   │   └── useTimeline.ts      # Timeline state management
-│   ├── utils/
-│   │   └── geo.ts              # Coordinate transformations
-│   └── App.tsx
-├── public/
-└── package.json
+│   ├── raw/
+│   │   ├── LLH/               # Raw survey data (209 LLH files)
+│   │   └── MOPS/              # MOP line definitions (KML)
+│   └── processed/             # Generated data for frontend
+│       ├── surveys.json       # Survey metadata index
+│       ├── transects.geojson  # All transect geometries
+│       ├── surfaces/          # 3D DEM files (.dem.bin, .dem.json)
+│       └── profiles/          # Per-transect elevation profiles
+│
+├── docs/
+│   ├── prd.md                 # Product requirements
+│   └── todo.md                # Task tracking
+│
+├── figures/                   # Generated visualizations (.png, .html)
+│
+├── scripts/                   # Python data processing
+│   ├── process_surveys.py     # Main pipeline orchestrator
+│   ├── generate_transects.py  # Segment points into transects
+│   ├── generate_dem.py        # Create 3D surface DEMs
+│   ├── visualize_surveys.py   # Static visualizations
+│   ├── compute_timeseries.py  # Time series analysis
+│   └── create_interactive_mop_map.py
+│
+├── tests/                     # pytest test suite
+│
+├── utilities/
+│   └── parse_llh.py           # Shared LLH file parser
+│
+└── web/                       # React frontend
+    ├── public/
+    │   └── processed -> ../../data/processed  # Symlink to data
+    ├── src/
+    │   ├── components/        # React components
+    │   ├── hooks/             # Custom hooks
+    │   ├── store/             # Zustand state management
+    │   ├── types/             # TypeScript types
+    │   └── utils/             # Utility functions
+    ├── index.html
+    ├── package.json
+    ├── tailwind.config.js
+    ├── tsconfig.json
+    └── vite.config.ts
 ```
 
 ## User Flows
@@ -212,13 +236,12 @@ oceanside-beach-viz/
 # Install Python dependencies
 pip install pandas numpy geopandas shapely
 
-# Install Node dependencies
-npm install
-
 # Process raw data
 python scripts/process_surveys.py
 
-# Start development server
+# Install Node dependencies and start frontend
+cd web
+npm install
 npm run dev
 ```
 

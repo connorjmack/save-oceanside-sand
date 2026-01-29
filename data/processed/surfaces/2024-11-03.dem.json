@@ -1,0 +1,29 @@
+{
+  "n_rows": 11,
+  "n_cols": 11,
+  "resolution": 2.0,
+  "bounds": {
+    "x_min": 1466.5587779867587,
+    "x_max": 1488.5587779867587,
+    "y_min": 465.64342055989357,
+    "y_max": 487.64342055989357,
+    "min_lat": 33.1941829268825,
+    "max_lat": 33.194380555341,
+    "min_lon": -117.38425750608201,
+    "max_lon": -117.38402135130158
+  },
+  "origin": {
+    "lat": 33.19,
+    "lon": -117.4
+  },
+  "nodata_value": -9999.0,
+  "point_count": 184,
+  "elevation_stats": {
+    "min": null,
+    "max": null,
+    "mean": null
+  },
+  "valid_cell_count": 0,
+  "total_cell_count": 121,
+  "survey_date": "2024-11-03"
+}

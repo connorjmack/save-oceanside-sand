@@ -6,41 +6,71 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Interactive web application for visualizing GPS beach survey transects from Oceanside, CA. Processes LLH files from Emlid Reach GNSS receivers (58 survey sessions, Nov 2022 - Jan 2026).
 
+## Project Structure
+
+```
+save-oceanside-sand/
+├── data/
+│   ├── raw/LLH/           # Raw GPS survey files (209 files)
+│   ├── raw/MOPS/          # MOP line definitions
+│   └── processed/         # Generated data (surveys.json, transects.geojson, surfaces/, profiles/)
+├── docs/                  # Documentation (prd.md, todo.md)
+├── figures/               # Generated visualizations
+├── scripts/               # Python data processing scripts
+├── tests/                 # pytest test suite
+├── utilities/             # Shared Python modules (parse_llh.py)
+└── web/                   # React frontend
+    ├── src/               # React components, hooks, store, types, utils
+    ├── public/processed   # Symlink to data/processed
+    └── (config files)     # package.json, vite.config.ts, tsconfig.json, etc.
+```
+
 ## Commands
 
 ```bash
-# Python data processing
-pip install pandas numpy geopandas shapely
+# Activate Python environment
+source .venv/bin/activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run data processing pipeline
 python scripts/process_surveys.py
 
+# Generate 3D surface DEMs
+python scripts/generate_dem.py
+
+# Run tests
+pytest tests/
+
 # Frontend development
+cd web
 npm install
 npm run dev
 ```
 
-Requires `VITE_MAPBOX_TOKEN` environment variable for satellite imagery.
-
 ## Architecture
 
-**Data Pipeline**: `data/LLH/*.LLH` → Python parser → `processed/` (surveys.json, transects.geojson, profiles/)
+**Data Pipeline**: `data/raw/LLH/*.LLH` → Python scripts → `data/processed/`
 
-**Frontend Stack**: React + TypeScript, Mapbox GL JS or Leaflet, Plotly.js or D3.js, Tailwind CSS
+**Frontend Stack**: React + TypeScript + Vite, Three.js (3D surfaces), Zustand (state), Tailwind CSS
 
-**Two Main Views**:
-- Map View: Timeline-controlled satellite map with transect overlays
-- Profile View: Elevation cross-sections comparing transects across dates
+**Views**:
+- Surface View: 3D interpolated beach surface with timeline navigation
+- Map View: Satellite map with transect overlays
+- Profile View: Elevation cross-sections across dates
 
 ## LLH File Format
 
 Space-delimited: `YYYY/MM/DD HH:MM:SS.sss lat lon height Q ns sdn sde sdu sdne sdeu sdun age ratio`
 
 - Quality flag (col 6): 1=RTK fix, 2=float, 5=single
-- Height (col 5): Ellipsoidal (WGS84), may need conversion to NAVD88
+- Height (col 5): Ellipsoidal (WGS84)
+- Files named: `YYYY_MM_DD_[DeviceName]_solution_YYYYMMDDHHMMSS.LLH`
 
-Files named: `YYYY_MM_DD_[DeviceName]_solution_YYYYMMDDHHMMSS.LLH`
+## Key Files
 
-## Key Implementation Challenges
-
-1. **Transect segmentation**: Raw LLH files are continuous point streams; segment by time gaps or directional changes
-2. **Cross-date transect matching**: Spatial matching algorithm to find corresponding transects within X meters
-3. **Performance**: 209 files with potentially millions of points; lazy loading required
+- `utilities/parse_llh.py` - Shared LLH parser (imported by all scripts)
+- `scripts/process_surveys.py` - Main data pipeline
+- `scripts/generate_dem.py` - 3D surface generation with scipy interpolation
+- `web/src/components/views/SurfaceView/` - 3D visualization with Three.js
