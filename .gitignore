@@ -2,6 +2,19 @@
 *.llh
 *.csv
 
+# Spatial data
+*.geojson
+*.shp
+*.shx
+*.dbf
+*.prj
+*.gpkg
+*.kml
+*.kmz
+*.gpx
+*.tif
+*.tiff
+
 # Images
 *.png
 *.gif
